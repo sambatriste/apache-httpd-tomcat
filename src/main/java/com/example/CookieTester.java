@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 
-@WebServlet(urlPatterns = "/cookie")
+@WebServlet("/cookie")
 public class CookieTester extends HttpServlet {
 
     @Override
