@@ -1,0 +1,17 @@
+version: "3"
+services:
+  web:
+    image: my-httpd:latest
+    container_name: "web"
+    ports:
+      - 80:80
+      - 443:443
+    links:
+      - app
+  app:
+    image: my-tomcat-jib:latest
+    container_name: "app"
+    ports:
+      - 8080:8080
+
+
