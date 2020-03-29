@@ -5,9 +5,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.example</groupId>
-  <artifactId>apache-tomcat-jib</artifactId>
+  <artifactId>apache-httpd-tomcat</artifactId>
   <version>0.0.1</version>
-  <name>apache-tomcat-jib</name>
+  <name>apache-httpd-tomcat</name>
   <packaging>war</packaging>
 
   <properties>
