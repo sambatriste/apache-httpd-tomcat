@@ -2,6 +2,11 @@
 
 ややまじめにApacheとTomcatの連携を勉強する。
 
+* 起動
+
+#+BEGIN_SRC sh
+docker-compose up
+#+END_SRC
 
 * Apache(httpd)
 
@@ -28,6 +33,8 @@ Allow from all
 
 ProxyPass / http://app:8080/
 #+END_SRC
+
+Tomcatのホスト名はdocker-comopose.ymlで記載した名前と一致させる。
 
 ** https（オレオレ）
 
@@ -93,6 +100,15 @@ apache/conf/httpd.conf
 ** TODO ロードバランシング
 
 ATD
+
+
+** Building Docker Image
+
+#+BEGIN_SRC sh
+cd apache
+docker build -t my-httpd .
+#+END_SRC
+
 
 * Tomcat 
 
