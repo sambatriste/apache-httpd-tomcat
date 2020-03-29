@@ -1,0 +1,134 @@
+#+TITLE: Apache(httpd) - Tomcat
+
+ややまじめにApacheとTomcatの連携を勉強する。
+
+
+* Apache(httpd)
+
+https://hub.docker.com/_/httpd
+
+** リバースプロキシ
+
+*** http.conf
+
+apache/conf/httpd.conf
+
+#+BEGIN_SRC
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+#+END_SRC
+
+#+BEGIN_SRC
+ProxyRequests Off
+
+<Proxy *>
+Order deny,allow
+Allow from all
+</Proxy>
+
+ProxyPass / http://app:8080/
+#+END_SRC
+
+** https（オレオレ）
+
+*** 証明書を作成
+
+- apache/conf/server.crt
+- apache/conf/server.csr
+- apache/conf/server.key
+
+
+#+BEGIN_SRC sh
+
+# 1.秘密鍵の作成 (パスワードは後で使うため覚えておく)
+openssl genrsa -aes128 2048 > server.key
+
+# 2. csrの作成 (1のパスワードが必要。それ以外は全部Enterキー押下でも構わない)
+openssl req -new -key server.key > server.csr
+
+# 3. sign (1のパスワードが必要)
+openssl x509 -in server.csr -days 36500 -req -signkey server.key > server.crt
+
+
+# 4. パスフレーズの消去
+mv server.key server.key.orig
+openssl rsa -in server.key.orig -out server.key
+
+#+END_SRC
+
+
+**** 動作確認
+
+#+BEGIN_SRC sh
+openssl \
+ s_server \
+ -tls1_2 \
+ -accept 443 \
+ -www \
+ -cert server.crt \
+ -key server.key 
+#+END_SRC
+
+https://localhost
+
+にアクセスする。
+
+*** http.conf
+
+apache/conf/httpd.conf
+
+
+#+BEGIN_SRC diff
+
+-#LoadModule socache_shmcb_module modules/mod_socache_shmcb.so
++LoadModule socache_shmcb_module modules/mod_socache_shmcb.so
+
+-#LoadModule ssl_module modules/mod_ssl.so
++LoadModule ssl_module modules/mod_ssl.so
+
+-#Include conf/extra/httpd-ssl.conf
+#+END_SRC
+
+
+** TODO ロードバランシング
+
+ATD
+
+* Tomcat 
+
+** Jib
+
+#+BEGIN_SRC xml
+      <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <version>2.1.0</version>
+        <configuration>
+          <from>
+            <image>tomcat:9.0</image>
+          </from>
+          <to>
+            <image>my-tomcat-jib</image>
+          </to>
+          <container>
+            <appRoot>/usr/local/tomcat/webapps/ROOT</appRoot>
+          </container>
+        </configuration>
+      </plugin>
+#+END_SRC
+
+#+BEGIN_SRC sh
+mvn clean package jib:dockerBuild
+#+END_SRC
+
+** CookieProcessor
+
+https://tomcat.apache.org/tomcat-9.0-doc/config/cookie-processor.html
+
+src/main/webapp/META-INF/context.xml
+
+#+BEGIN_SRC xml
+<Context>
+  <CookieProcessor sameSiteCookies="none" />
+</Context>
+#+END_SRC
