@@ -99,7 +99,17 @@ apache/conf/httpd.conf
 
 ** TODO ロードバランシング
 
-ATD
+https://github.com/sambatriste/apache-httpd-tomcat/commit/87c43f57cd8f3f18a29d828b82f7b4a6ccca17b2
+
+apache/conf/httpd.conf
+
+#+BEGIN_SRC
+ProxyPass / balancer://mycluster lbmethod=byrequests timeout=1
+<Proxy balancer://mycluster>
+  BalancerMember http://app1:8080 loadfactor=1
+  BalancerMember http://app2:8080 loadfactor=1
+</Proxy>
+#+END_SRC
 
 
 ** Building Docker Image
