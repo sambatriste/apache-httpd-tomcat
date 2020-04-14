@@ -44,7 +44,7 @@
             <image>my-tomcat-jib</image>
           </to>
           <container>
-            <appRoot>/usr/local/tomcat/webapps/ROOT</appRoot>
+            <appRoot>/usr/local/tomcat/webapps/myapp</appRoot>
           </container>
         </configuration>
       </plugin>
