@@ -34,7 +34,7 @@ Allow from all
 ProxyPass / http://app:8080/
 #+END_SRC
 
-Tomcatのホスト名はdocker-comopose.ymlで記載した名前と一致させる。
+Tomcatのホスト名はdocker-compose.ymlで記載した名前と一致させる。
 
 ** https（オレオレ）
 
